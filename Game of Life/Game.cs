@@ -25,13 +25,10 @@
 
         public void Evolve()
         {
-            for (int x = 0; x < _gridSize.Width; ++x)
+            foreach (Point point in GridPoints())
             {
-                for (int y = 0; y < _gridSize.Height; ++y)
-                {
-                    _currentPoint = new Point(x, y);
-                    EvolveCurrentCell();
-                }
+                _currentPoint = point;
+                EvolveCurrentCell();
             }
 
             CopyWriteGridToReadGrid();
@@ -78,7 +75,8 @@
 
         private int CountAliveNeighboursAroundCurrentCell()
         {
-            return PointsAround(_currentPoint).Count(CellIsAlive);
+            return PointsAround(_currentPoint)
+                    .Count(CellIsAlive);
         }
 
         private bool CellIsAlive(Point point)
@@ -103,20 +101,26 @@
 
         private void CopyWriteGridToReadGrid()
         {
+            foreach (Point point in GridPoints())
+            {
+                if (_writeGrid.IsCellSet(point))
+                {
+                    _readGrid.SetCell(point);
+                }
+                else
+                {
+                    _readGrid.UnsetCell(point);
+                }
+            }
+        }
+
+        private IEnumerable<Point> GridPoints()
+        {
             for (int x = 0; x < _gridSize.Width; ++x)
             {
                 for (int y = 0; y < _gridSize.Height; ++y)
                 {
-                    Point point = new Point(x, y);
-
-                    if (_writeGrid.IsCellSet(point))
-                    {
-                        _readGrid.SetCell(point);
-                    }
-                    else
-                    {
-                        _readGrid.UnsetCell(point);
-                    }
+                    yield return new Point(x, y);
                 }
             }
         }
