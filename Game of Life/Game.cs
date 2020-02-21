@@ -58,9 +58,19 @@
             }
         }
 
+        private int CountAliveNeighboursAroundCurrentCell()
+        {
+            return PointsAround(_currentPoint).Count(CellIsAlive);
+        }
+
         private bool CurrentCellIsAlive()
         {
             return CellIsAlive(_currentPoint);
+        }
+
+        private bool CellIsAlive(Point point)
+        {
+            return _readGrid.IsCellSet(point);
         }
 
         private void SetCurrentCellAlive()
@@ -71,32 +81,6 @@
         private void SetCurrentCellDead()
         {
             _writeGrid.UnsetCell(_currentPoint);
-        }
-
-        private int CountAliveNeighboursAroundCurrentCell()
-        {
-            return PointsAround(_currentPoint)
-                    .Count(CellIsAlive);
-        }
-
-        private bool CellIsAlive(Point point)
-        {
-            return _readGrid.IsCellSet(point);
-        }
-
-        private static IEnumerable<Point> PointsAround(Point point)
-        {
-            int x = point.X;
-            int y = point.Y;
-
-            yield return new Point(x - 1, y - 1);
-            yield return new Point(x, y - 1);
-            yield return new Point(x + 1, y - 1);
-            yield return new Point(x - 1, y);
-            yield return new Point(x + 1, y);
-            yield return new Point(x - 1, y + 1);
-            yield return new Point(x, y + 1);
-            yield return new Point(x + 1, y + 1);
         }
 
         private void CopyWriteGridToReadGrid()
@@ -123,6 +107,21 @@
                     yield return new Point(x, y);
                 }
             }
+        }
+
+        private static IEnumerable<Point> PointsAround(Point point)
+        {
+            int x = point.X;
+            int y = point.Y;
+
+            yield return new Point(x - 1, y - 1);
+            yield return new Point(x, y - 1);
+            yield return new Point(x + 1, y - 1);
+            yield return new Point(x - 1, y);
+            yield return new Point(x + 1, y);
+            yield return new Point(x - 1, y + 1);
+            yield return new Point(x, y + 1);
+            yield return new Point(x + 1, y + 1);
         }
     }
 }
